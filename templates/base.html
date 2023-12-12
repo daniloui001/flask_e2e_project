@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Flask Website</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://unpkg.com/gsap@3.9.0/dist/gsap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="line" id="line1">Life is like a game</div>
+        <div class="line" id="line2">But it doesn't have to be single player</div>
+        <div class="line" id="line3">
+            <button id="newGameBtn">New Game</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

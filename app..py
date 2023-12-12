@@ -1,4 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for, redirect, session
+from authlib.integrations.flask_client import OAuth
+from authlib.common.security import generate_token
+from dotenv import load_dotenv
+import os
+import sys
 import pandas as pd
 
 app = Flask(__name__)
@@ -11,11 +16,9 @@ def index():
 def about():
     return render_template('about.html')
 
-df = pd.read_csv('https://raw.githubusercontent.com/hantswilliams/HHA_504_2023/main/WK1/data/113243405_StonyBrookSouthamptonHospital_StandardCharges.csv')
 @app.route('/data')
-def data(data=df):
-    data = data.sample(15)
-    return render_template('data.html', data=data)
+def data():
+    return render_template('data.html')
 
 if __name__ == '__main__':
     app.run(
