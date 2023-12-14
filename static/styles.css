@@ -1,14 +1,6 @@
 body {
     margin: 0;
-    font-family: 'YourCustomFont', 'Arial', sans-serif; /* Use your custom font and fallback to Arial */
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 300vh;
+    font-family: 'VT323', sans-serif;
 }
 
 .line {
