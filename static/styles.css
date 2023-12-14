@@ -1,3 +1,11 @@
+/* Add @font-face rule for VT323 font */
+@font-face {
+    font-family: 'VT323';
+    src: url('/static/fonts/VT323-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     margin: 0;
     font-family: 'VT323', sans-serif;
@@ -5,11 +13,11 @@ body {
 
 .line {
     opacity: 0;
-    transform: translateY(3px); /* Adjusted initial y value */
+    transform: translateY(3px);
     transition: opacity 1s, transform 1s;
     margin-bottom: 20px;
-    font-size: 24px; /* Adjusted font size */
-    font-weight: bold; /* Added font weight for emphasis */
+    font-size: 24px;
+    font-weight: bold;
 }
 
 #newGameBtn {
