@@ -1,5 +1,5 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Create custom bounce.easeOut with increased amplitude
+document.addEventListener('DOMContentLoaded', function () {
+    // Create custom easing functions
     gsap.config({
         customEase: {
             'bounceOut': function (p) {
@@ -12,13 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     return (54 / 5 * p * p) - (513 / 25 * p) + 268 / 25;
                 }
-            }
-        }
-    });
-
-    // Create custom elastic.easeOut with increased amplitude
-    gsap.config({
-        customEase: {
+            },
             'elasticOut': function (p) {
                 return Math.pow(2, -10 * p) * Math.sin((p - 0.075) * (2 * Math.PI) / 0.3) + 1;
             }
@@ -26,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     const lines = document.querySelectorAll('.line');
-
     gsap.set(lines, { opacity: 0, y: 3 });
 
     const timeline = gsap.timeline({ defaults: { duration: 1.5 } });
@@ -43,4 +36,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.addEventListener('scroll', checkVisibility);
     checkVisibility();
+
+    const plusSign = document.createElement('div');
+    plusSign.classList.add('plus-sign');
+    document.body.appendChild(plusSign);
+
+    function animatePlusSign() {
+        gsap.fromTo(plusSign, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.inOut' });
+        gsap.to(plusSign, { opacity: 0, duration: 0.5, ease: 'power2.inOut', delay: 1 });
+    }
+
+    function periodicallyShowPlusSign() {
+        animatePlusSign();
+        setInterval(animatePlusSign, 3000); // Adjust the interval as needed (in milliseconds)
+    }
+
+    periodicallyShowPlusSign();
 });

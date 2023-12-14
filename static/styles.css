@@ -4,10 +4,19 @@
     font-weight: normal;
     font-style: normal;
 }
-
 body {
     margin: 0;
     font-family: 'VT323', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; 
+    background-color: black; 
+    color: white; 
+}
+
+.container {
+    text-align: center;
 }
 
 .line {
@@ -22,4 +31,35 @@ body {
 #newGameBtn {
     padding: 10px 20px;
     font-size: 16px;
+    font-family: 'VT323', sans-serif;
+}
+
+.plus-sign {
+    position: absolute;
+    top: 20px; /* Adjust the top position */
+    left: 20px; /* Adjust the left position */
+    width: 30px;
+    height: 3px;
+    background-color: white;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.7); /* Add diffuse glow effect */
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        width: 30px;
+        height: 3px;
+        background-color: white;
+        box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.7); /* Add diffuse glow effect */
+    }
+
+    &::before {
+        transform: rotate(90deg);
+    }
+
+    &::after {
+        transform: rotate(180deg);
+    }
 }
