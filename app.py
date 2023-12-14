@@ -12,7 +12,7 @@ app = Flask(__name__)
 def index():
     return render_template('base.html')
 
-@app.route('/about')
+@app.route('/newgame')
 def about():
     return render_template('about.html')
 

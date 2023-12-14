@@ -41,15 +41,18 @@ document.addEventListener('DOMContentLoaded', function () {
     plusSign.classList.add('plus-sign');
     document.body.appendChild(plusSign);
 
+    const trail = document.createElement('div');
+    trail.classList.add('trail');
+    plusSign.appendChild(trail);
+
     function animatePlusSign() {
-        gsap.fromTo(plusSign, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.inOut' });
-        gsap.to(plusSign, { opacity: 0, duration: 0.5, ease: 'power2.inOut', delay: 1 });
+        gsap.fromTo(plusSign, { y: window.innerHeight + 20, opacity: 0.5 }, { y: -20, opacity: 0.5, duration: 10, ease: 'linear', repeat: -1 });
+
+        const wiggle = gsap.timeline({ repeat: -1 });
+        wiggle.to(trail, { x: 10, duration: 0.2 });
+        wiggle.to(trail, { x: -10, duration: 0.2 });
+        wiggle.to(trail, { x: 0, duration: 0.2 });
     }
 
-    function periodicallyShowPlusSign() {
-        animatePlusSign();
-        setInterval(animatePlusSign, 3000); // Adjust the interval as needed (in milliseconds)
-    }
-
-    periodicallyShowPlusSign();
+    animatePlusSign();
 });

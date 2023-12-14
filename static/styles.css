@@ -38,21 +38,23 @@ body {
     position: absolute;
     top: 20px; /* Adjust the top position */
     left: 20px; /* Adjust the left position */
-    width: 30px;
-    height: 3px;
+    width: 10px;
+    height: 1px;
     background-color: white;
     transform: translate(-50%, -50%);
     opacity: 0;
     box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.7); /* Add diffuse glow effect */
 
     &::before,
-    &::after {
+    &::after,
+    .trail {
         content: '';
         position: absolute;
-        width: 30px;
-        height: 3px;
+        width: 5px; /* Adjust the width of the trail */
+        height: 20px; /* Adjust the height of the trail */
         background-color: white;
         box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.7); /* Add diffuse glow effect */
+        transform-origin: center bottom; /* Adjust the transform origin for the trail */
     }
 
     &::before {
@@ -61,5 +63,10 @@ body {
 
     &::after {
         transform: rotate(180deg);
+    }
+
+    .trail {
+        bottom: 0; /* Align the trail to the bottom of the plus sign */
+        left: 50%;
     }
 }

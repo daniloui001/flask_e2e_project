@@ -13,9 +13,14 @@
         <div class="line" id="line1">Life is like a game</div>
         <div class="line" id="line2">But it doesn't have to be single player</div>
         <div class="line" id="line3">
-            <button id="newGameBtn">New Game</button>
+            <button id="newGameBtn" onclick="navigateToNewGame()">New Game</button>
         </div>
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        function navigateToNewGame() {
+            window.location.href = 'newgame.html';
+        }
+    </script>
 </body>
 </html>
