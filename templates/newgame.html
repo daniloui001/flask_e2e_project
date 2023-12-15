@@ -1,0 +1,51 @@
+<!-- templates/base.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your App</title>
+</head>
+<body>
+    <h1>Welcome to Your App</h1>
+
+    <form id="locationForm">
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="game_arcades">Game Arcades</option>
+            <option value="cafes">Cafes</option>
+            <option value="libraries">Libraries</option>
+        </select>
+
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="latitude" placeholder="Enter latitude">
+
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="longitude" placeholder="Enter longitude">
+
+        <button type="button" onclick="getNearbyLocations()">Get Nearby Locations</button>
+    </form>
+
+    <div id="result">
+    </div>
+
+    <script>
+        function getNearbyLocations() {
+            const category = document.getElementById('category').value;
+            const latitude = document.getElementById('latitude').value;
+            const longitude = document.getElementById('longitude').value;
+
+            fetch(`/api/nearby-locations?category=${category}&lat=${latitude}&lng=${longitude}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultDiv = document.getElementById('result');
+                    resultDiv.innerHTML = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Error fetching nearby locations:', error);
+                });
+        }
+    </script>
+</body>
+</html>
