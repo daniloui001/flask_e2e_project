@@ -1,3 +1,33 @@
+function getNearbyLocations() {
+    const category = document.getElementById('category').value;
+
+    // Check if Geolocation is supported
+    if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                fetch(`/api/nearby-locations?category=${category}&lat=${latitude}&lng=${longitude}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const resultDiv = document.getElementById('result');
+                        resultDiv.innerHTML = JSON.stringify(data, null, 2);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching nearby locations:', error);
+                    });
+            },
+            error => {
+                console.error('Error getting location:', error);
+            }
+        );
+    } else {
+        console.error('Geolocation is not supported by your browser.');
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', function () {
     // Create custom easing functions
     gsap.config({
