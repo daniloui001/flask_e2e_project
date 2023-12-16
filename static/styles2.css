@@ -5,17 +5,22 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0; /* Add your desired background color */
+    background-color: #000000; /* Add your desired background color */
 }
 
 .login-container {
     text-align: center;
-    background-color: white;
+    background-color: rgb(133, 118, 186);
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(255, 145, 145, 0.1);
 }
 
 h1 {
     color: #333; /* Add your desired text color */
+}
+
+button {
+    font-family: 'VT323', sans-serif;
+    font-size: 16px;
 }
