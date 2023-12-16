@@ -34,6 +34,12 @@ body {
     font-family: 'VT323', sans-serif;
 }
 
+#continueGameBtn {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: 'VT323', sans-serif;
+}
+
 .plus-sign {
     position: absolute;
     top: 20px; /* Adjust the top position */

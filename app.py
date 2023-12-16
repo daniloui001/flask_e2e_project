@@ -24,9 +24,9 @@ def index():
 def about():
     return render_template('newgame.html')
 
-@app.route('/data')
+@app.route('/login')
 def data():
-    return render_template('data.html')
+    return render_template('login.html')
 
 @app.route('/api/nearby-locations', methods=['GET'])
 def get_nearby_locations():
