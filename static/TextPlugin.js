@@ -9,15 +9,61 @@
 */
 
 /* eslint-disable */
-import { emojiSafeSplit, getText, splitInnerHTML } from "./utils/strings.js";
 
 var gsap,
-    _tempDiv,
-    _getGSAP = function _getGSAP() {
-  return gsap || typeof window !== "undefined" && (gsap = window.gsap) && gsap.registerPlugin && gsap;
+    _tempDiv;
+
+var _getGSAP = function _getGSAP() {
+  return gsap || (typeof window !== "undefined" && (gsap = window.gsap)) && gsap.registerPlugin && gsap;
 };
 
-export var TextPlugin = {
+var emojiSafeSplit = function emojiSafeSplit(value, delimiter) {
+  // Emojis can contain multiple Unicode characters, so we need to split them carefully.
+  var result = [];
+  var index = 0;
+
+  while (index < value.length) {
+    var char = value.charAt(index);
+
+    if (char.match(/[\uD800-\uDBFF]/)) {
+      // High surrogate
+      var highSurrogate = char;
+      var lowSurrogate = value.charAt(index + 1);
+
+      if (lowSurrogate && lowSurrogate.match(/[\uDC00-\uDFFF]/)) {
+        // Low surrogate
+        result.push(highSurrogate + lowSurrogate);
+        index += 2;
+        continue;
+      }
+    }
+
+    result.push(char);
+    index++;
+  }
+
+  return result.join(delimiter);
+};
+
+var getText = function getText(element) {
+  if (element.textContent !== undefined) {
+    return element.textContent;
+  } else {
+    return element.innerText;
+  }
+};
+
+var splitInnerHTML = function splitInnerHTML(element, delimiter, preserveSpaces) {
+  var value = getText(element);
+
+  if (preserveSpaces) {
+    value = value.replace(/  /g, "\u00A0\u00A0"); // Replace consecutive spaces with non-breaking spaces
+  }
+
+  return emojiSafeSplit(value, delimiter);
+};
+
+var TextPlugin = {
   version: "3.12.4",
   name: "text",
   init: function init(target, value, tween) {
@@ -159,8 +205,6 @@ export var TextPlugin = {
     }
   }
 };
-TextPlugin.splitInnerHTML = splitInnerHTML;
-TextPlugin.emojiSafeSplit = emojiSafeSplit;
-TextPlugin.getText = getText;
+
 _getGSAP() && gsap.registerPlugin(TextPlugin);
 export { TextPlugin as default };
