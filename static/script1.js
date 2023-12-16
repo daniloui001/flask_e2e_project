@@ -1,14 +1,14 @@
 function startTypingEffect() {
-    console.log("startTypingEffect called");
-    const text = "Find Your Third Place";
-    const typingSpeed = 0.1;
+    const yourElement = document.getElementById("typing-text");
 
-    gsap.to("#typing-text", {
-        text: { value: text, delimiter: "" },
-        duration: text.length * typingSpeed,
-        ease: "power1.inOut",
+    gsap.to(yourElement, {
+        duration: 1,
+        text: {
+            value: "Find Your Third Place",
+            newClass: "class2",
+            delimiter: " ",
+        },
     });
 }
 
-// Call the typing effect function when the page loads
 window.onload = startTypingEffect;
