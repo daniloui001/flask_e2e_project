@@ -3,8 +3,6 @@ from authlib.integrations.flask_client import OAuth
 from authlib.common.security import generate_token
 from dotenv import load_dotenv
 import os
-import sys
-import pandas as pd
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -19,20 +17,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-class Player(db.Model):
-    PlayerID = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Password = db.Column(db.String(255))
-
 API_KEY = os.getenv('API_KEY')
 
 PLACES_API_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
-
-bcrypt = Bcrypt(app)
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('MY_SQL_CONNECTOR')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
@@ -40,7 +27,7 @@ login_manager = LoginManager(app)
 
 class Player(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    PlayerID = db.Column(db.String(50), unique=True, nullable=False)
+    PlayerID = db.Column(db.String(10), unique=True, nullable=False)
     Password = db.Column(db.String(255))
 
 @login_manager.user_loader
@@ -58,6 +45,30 @@ def init_db():
 @app.route('/')
 def index():
     return render_template('base.html')
+
+@app.route('/register', methods=['POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        # Hash the password before storing it
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+        new_user = Player(PlayerID=username, Password=hashed_password)
+
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Registration successful!', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            db.session.rollback()
+            flash('Error during registration', 'error')
+            # Log the error for debugging purposes
+            print(f"Error during registration: {e}")
+
+    return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
