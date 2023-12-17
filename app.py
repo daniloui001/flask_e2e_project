@@ -1,28 +1,91 @@
-from flask import Flask, render_template, send_from_directory, url_for, redirect, session
+from flask import Flask, render_template, send_from_directory, url_for, redirect, session, flash
 from authlib.integrations.flask_client import OAuth
 from authlib.common.security import generate_token
 from dotenv import load_dotenv
 import os
 import sys
 import pandas as pd
-
+from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask import Flask, render_template, jsonify, request
 import requests
 
+load_dotenv()
+
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('MY_SQL_CONNECTOR')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+class Player(db.Model):
+    PlayerID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    Password = db.Column(db.String(255))
 
 API_KEY = os.getenv('API_KEY')
 
 PLACES_API_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
 
+bcrypt = Bcrypt(app)
 
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('MY_SQL_CONNECTOR')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  
+
+db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
+
+class Player(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    PlayerID = db.Column(db.String(50), unique=True, nullable=False)
+    Password = db.Column(db.String(255))
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Player.query.get(int(user_id))
+
+@app.route('/init-db')
+def init_db():
+    if app.config.get("DEBUG"):
+        db.create_all()
+        return 'Database initialized successfully!'
+    else:
+        return 'Database initialization is restricted.'
+    
 @app.route('/')
 def index():
     return render_template('base.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        user = Player.query.filter_by(PlayerID=username).first()
+
+        if user and bcrypt.check_password_hash(user.Password, password):
+            login_user(user)
+            flash('Login successful!', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid username or password', 'error')
+
+    return render_template('login.html')
+
 @app.route('/newgame')
+@login_required
 def about():
     return render_template('newgame.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 @app.route('/login')
 def data():
