@@ -27,22 +27,38 @@
 
     <div id="result"></div>
 
-    <div id="map-container">
-    </div>
+    <div id="map-container"></div>
 
     <script>
         function getNearbyLocations() {
             const category = document.getElementById('category').value;
 
-            fetch(`/api/nearby-locations?category=${category}&lat=${latitude}&lng=${longitude}`)
-                .then(response => response.json())
-                .then(data => {
-                    const resultDiv = document.getElementById('result');
-                    resultDiv.innerHTML = JSON.stringify(data, null, 2);
-                })
-                .catch(error => {
-                    console.error('Error fetching nearby locations:', error);
-                });
+            // Check if the Geolocation API is supported by the browser
+            if (navigator.geolocation) {
+                // Get the user's current location
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+
+                        // Call the API with the retrieved location
+                        fetch(`/api/nearby-locations?category=${category}&lat=${latitude}&lng=${longitude}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                const resultDiv = document.getElementById('result');
+                                resultDiv.innerHTML = JSON.stringify(data, null, 2);
+                            })
+                            .catch(error => {
+                                console.error('Error fetching nearby locations:', error);
+                            });
+                    },
+                    (error) => {
+                        console.error('Error getting user location:', error);
+                    }
+                );
+            } else {
+                console.error('Geolocation is not supported by this browser.');
+            }
         }
     </script>
 </body>
