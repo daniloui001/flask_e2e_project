@@ -1,3 +1,22 @@
+let map;
+
+function initializeMap() {
+    const initialCoordinates = { lat: YOUR_INITIAL_LATITUDE, lng: YOUR_INITIAL_LONGITUDE };
+    
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: initialCoordinates,
+        zoom: 12,
+    });
+}
+
+function addMarker(location) {
+    new google.maps.Marker({
+        position: { lat: location.lat, lng: location.lng },
+        map: map,
+        title: location.name,
+    });
+}
+
 function startTypingEffect() {
     const yourElement = document.getElementById("typing-text");
 
@@ -32,4 +51,26 @@ function startTypingEffect() {
     window.onload = startNextSequence;
 }
 
-startTypingEffect();
+function getNearbyLocations(category, latitude, longitude) {
+    fetch(`/api/nearby-locations?category=${category}&lat=${latitude}&lng=${longitude}`)
+        .then(response => response.json())
+        .then(data => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = JSON.stringify(data, null, 2);
+
+            // Clear existing markers on the map
+            map && map.setZoom(12);
+            map && map.setCenter({ lat: parseFloat(latitude), lng: parseFloat(longitude) });
+
+            // Add markers for nearby locations
+            data.forEach(location => addMarker(location));
+        })
+        .catch(error => {
+            console.error('Error fetching nearby locations:', error);
+        });
+}
+
+window.onload = function () {
+    initializeMap();
+    startTypingEffect();
+};
