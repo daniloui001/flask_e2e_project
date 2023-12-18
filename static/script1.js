@@ -1,10 +1,8 @@
 let map;
 
 function initializeMap() {
-    const initialCoordinates = { lat: YOUR_INITIAL_LATITUDE, lng: YOUR_INITIAL_LONGITUDE };
-    
     map = new google.maps.Map(document.getElementById('map'), {
-        center: initialCoordinates,
+        center: { lat: YOUR_INITIAL_LATITUDE, lng: YOUR_INITIAL_LONGITUDE },
         zoom: 12,
     });
 }
@@ -48,22 +46,22 @@ function startTypingEffect() {
         sequenceIndex++;
     }
 
-    window.onload = startNextSequence;
+    startNextSequence();
+
+    document.addEventListener("DOMContentLoaded", () => {
+        
+        initializeMap();
+    });
 }
 
-function getNearbyLocations(category, latitude, longitude) {
+function getNearbyLocations() {
+    const category = document.getElementById('category').value;
+
     fetch(`/api/nearby-locations?category=${category}&lat=${latitude}&lng=${longitude}`)
         .then(response => response.json())
         .then(data => {
             const resultDiv = document.getElementById('result');
             resultDiv.innerHTML = JSON.stringify(data, null, 2);
-
-            // Clear existing markers on the map
-            map && map.setZoom(12);
-            map && map.setCenter({ lat: parseFloat(latitude), lng: parseFloat(longitude) });
-
-            // Add markers for nearby locations
-            data.forEach(location => addMarker(location));
         })
         .catch(error => {
             console.error('Error fetching nearby locations:', error);
@@ -71,6 +69,5 @@ function getNearbyLocations(category, latitude, longitude) {
 }
 
 window.onload = function () {
-    initializeMap();
     startTypingEffect();
 };

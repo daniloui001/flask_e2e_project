@@ -15,9 +15,7 @@
 
     <form id="locationForm">
         <label for="category">Where To Go...</label>
-    </div>
 
-    <div>
         <select id="category" name="category">
             <option value="game_arcades">Virtual Escape</option>
             <option value="cafes">Coffee and Cake</option>
@@ -29,13 +27,12 @@
 
     <div id="result"></div>
 
-    <div id="map"></div>
+    <div id="map-container">
+    </div>
 
     <script>
         function getNearbyLocations() {
             const category = document.getElementById('category').value;
-            const latitude = document.getElementById('latitude').value;
-            const longitude = document.getElementById('longitude').value;
 
             fetch(`/api/nearby-locations?category=${category}&lat=${latitude}&lng=${longitude}`)
                 .then(response => response.json())

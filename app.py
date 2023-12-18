@@ -10,6 +10,7 @@ from flask import Flask, render_template, jsonify, request
 from flask_migrate import Migrate
 import mysql.connector
 import requests
+import ngrok
 
 load_dotenv()
 
@@ -158,7 +159,7 @@ def get_nearby_locations():
     return jsonify({'locations': locations})
 
 if __name__ == '__main__':
-    app.run(
-        debug=True,
-        port=8080
-    )
+    public_url = ngrok.connect(8000)  # Assuming your Flask app runs on port 8000
+    print(" * ngrok tunnel \"{}\" -> \"http://127.0.0.1:{}/\"".format(public_url, 8000))
+
+    app.run(debug=True, port=8000)
