@@ -21,7 +21,6 @@ API_KEY = os.getenv('API_KEY')
 
 PLACES_API_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
 
-db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 
@@ -29,6 +28,10 @@ class Player(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     PlayerID = db.Column(db.String(10), unique=True, nullable=False)
     Password = db.Column(db.String(255))
+
+@app.route('/')
+def index():
+    return render_template('base.html')
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -41,10 +44,6 @@ def init_db():
         return 'Database initialized successfully!'
     else:
         return 'Database initialization is restricted.'
-    
-@app.route('/')
-def index():
-    return render_template('base.html')
 
 @app.route('/register', methods=['POST'])
 def register():

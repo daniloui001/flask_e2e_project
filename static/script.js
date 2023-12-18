@@ -1,3 +1,5 @@
+document.getElementById('newGameBtn').addEventListener('click', navigateToRegister);
+document.getElementById('continueGameBtn').addEventListener('click', navigateToLogin);
 function getNearbyLocations() {
     const category = document.getElementById('category').value;
 

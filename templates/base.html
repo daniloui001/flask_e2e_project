@@ -6,7 +6,9 @@
     <title>Your Flask Website</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link href='https://fonts.googleapis.com/css?family=VT323' rel='stylesheet'>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.0/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.0/gsap.min.js" async></script>
+    <script src="{{ url_for('static', filename='script.js') }}" async></script>
+    
 </head>
 <body>
     <div class="container">
@@ -17,14 +19,14 @@
             <button id="continueGameBtn" onclick="navigateToContinueGame()">Continue Game</button>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script>
-        function navigateToNewGame() {
-            window.location.href = '/newgame';
-            }
-        function navigateToContinueGame() {
-            window.location.href = '/login';
-            }
+    function navigateToRegister() {
+        window.location.href = '/register';
+    }
+
+    function navigateToLogin() {
+        window.location.href = '/login';
+    }
     </script>
 </body>
 </html>
