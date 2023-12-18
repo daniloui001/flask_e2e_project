@@ -124,7 +124,7 @@ def get_nearby_locations():
     if not category or not lat or not lng:
         return jsonify({'error': 'Missing required parameters'}), 400
 
-    if category == 'arcades':
+    if category == 'game_arcades':
         place_type = 'arcade'
     elif category == 'cafes':
         place_type = 'cafe'

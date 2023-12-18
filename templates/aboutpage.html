@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Flask Website</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles4.css') }}">
+    <link href='https://fonts.googleapis.com/css?family=VT323' rel='stylesheet'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.0/gsap.min.js" async></script>
+    <script src="{{ url_for('static', filename='script3.js') }}" async></script>
+</head>
+<body>
+    <div class="container">
+        <div class="box" id="box1">
+            <h2>Who We Are</h2>
+            <p>
+                Welcome to our community! We believe in the power of collaboration and shared experiences.
+                Life is a journey, and it becomes more meaningful when we embark on it together.
+            </p>
+        </div>
+
+        <div class="box" id="box2">
+            <h2>Our Vision</h2>
+            <p>
+                At our core, we envision a world where individuals connect, learn, and grow together.
+                By fostering a sense of community, we aim to make every moment a shared adventure.
+            </p>
+        </div>
+
+        <div class="big-box" id="mission-box">
+            <h2>Our Mission</h2>
+            <p>
+                Our mission is to create a platform that brings people together, breaking the barriers
+                of isolation and fostering a sense of belonging. We strive to provide opportunities for
+                collaboration, learning, and meaningful connections that enrich the tapestry of life.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function navigateToRegister() {
+            window.location.href = '/register';
+        }
+
+        function navigateToLogin() {
+            window.location.href = '/login';
+        }
+    </script>
+</body>
+</html>
