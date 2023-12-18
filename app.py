@@ -7,7 +7,18 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask import Flask, render_template, jsonify, request
+from flask_migrate import Migrate
+import mysql.connector
 import requests
+
+cnx = mysql.connector.connect(
+    user="dalouie",
+    password= os.getenv('password'),
+    host="finale.mysql.database.azure.com",
+    port=3306,
+    database="finale",
+    ssl_disabled=False
+)
 
 load_dotenv()
 
@@ -16,6 +27,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('MY_SQL_CONNECTOR')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 API_KEY = os.getenv('API_KEY')
 
@@ -29,13 +41,13 @@ class Player(UserMixin, db.Model):
     PlayerID = db.Column(db.String(10), unique=True, nullable=False)
     Password = db.Column(db.String(255))
 
-@app.route('/')
-def index():
-    return render_template('base.html')
-
 @login_manager.user_loader
 def load_user(user_id):
     return Player.query.get(int(user_id))
+
+@app.route('/')
+def index():
+    return render_template('base.html')
 
 @app.route('/init-db')
 def init_db():
@@ -45,11 +57,17 @@ def init_db():
     else:
         return 'Database initialization is restricted.'
 
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
+
+        # Check if the username already exists
+        existing_user = Player.query.filter_by(PlayerID=username).first()
+        if existing_user:
+            flash('Username already exists. Please choose another username.', 'error')
+            return redirect(url_for('register'))
 
         # Hash the password before storing it
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -59,8 +77,12 @@ def register():
         try:
             db.session.add(new_user)
             db.session.commit()
+
+            # Log in the user after successful registration
+            login_user(new_user)
+
             flash('Registration successful!', 'success')
-            return redirect(url_for('login'))
+            return redirect(url_for('newgame'))  # Corrected endpoint
         except Exception as e:
             db.session.rollback()
             flash('Error during registration', 'error')
@@ -72,23 +94,16 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-
-        user = Player.query.filter_by(PlayerID=username).first()
-
-        if user and bcrypt.check_password_hash(user.Password, password):
-            login_user(user)
-            flash('Login successful!', 'success')
-            return redirect(url_for('index'))
+        next_url = session.get('next_url')
+        if next_url:
+            session.pop('next_url') 
+            return redirect(next_url)
         else:
-            flash('Invalid username or password', 'error')
-
+            return redirect(url_for('index'))
     return render_template('login.html')
 
 @app.route('/newgame')
-@login_required
-def about():
+def newgame():
     return render_template('newgame.html')
 
 @app.route('/logout')
@@ -96,10 +111,6 @@ def about():
 def logout():
     logout_user()
     return redirect(url_for('login'))
-
-@app.route('/login')
-def data():
-    return render_template('login.html')
 
 @app.route('/api/nearby-locations', methods=['GET'])
 def get_nearby_locations():

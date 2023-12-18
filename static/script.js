@@ -1,5 +1,11 @@
 document.getElementById('newGameBtn').addEventListener('click', navigateToRegister);
 document.getElementById('continueGameBtn').addEventListener('click', navigateToLogin);
+function navigateToRegister() {
+    window.location.href = '/register';
+}
+function navigateToLogin() {
+    window.location.href = '/login';
+}
 function getNearbyLocations() {
     const category = document.getElementById('category').value;
 

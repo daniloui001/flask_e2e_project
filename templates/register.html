@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles3.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link href='https://fonts.googleapis.com/css?family=VT323' rel='stylesheet'>
     <script src="{{ url_for('static', filename='script2.js') }}" defer></script>
 </head>
@@ -12,25 +12,45 @@
     <div class="container">
         <h2>Register</h2>
         <form id="registerForm">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
 
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
 
-            <label for="howFound">How did you find out about us?</label>
-            <select id="howFound" name="howFound" required>
-                <option value="search">Search Engine</option>
-                <option value="socialMedia">Social Media</option>
-                <option value="friend">From a Friend</option>
-                <option value="other">Other</option>
-            </select>
+            <div>
+                <label for="howFound">How did you find out about us?</label>
+                <select id="howFound" name="howFound" required>
+                    <option value="search">Search Engine</option>
+                    <option value="socialMedia">Social Media</option>
+                    <option value="friend">From a Friend</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
 
-            <button type="submit">Register</button>
+            <div>
+                <label for="additionalInfo">Additional Information:</label>
+            </div>
+            <div>
+                <textarea id="additionalInfo" name="additionalInfo" rows="4" cols="50" placeholder="Enter additional information"></textarea>
+            </div>
+
+            <button type="button" onclick="navigateToNewGame()">Register</button>
         </form>
     </div>
+    <script>
+        function navigateToNewGame() {
+            window.location.href = '/newgame';
+        }
+    </script>
 </body>
 </html>
