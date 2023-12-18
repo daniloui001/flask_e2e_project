@@ -11,15 +11,6 @@ from flask_migrate import Migrate
 import mysql.connector
 import requests
 
-cnx = mysql.connector.connect(
-    user="dalouie",
-    password= os.getenv('password'),
-    host="finale.mysql.database.azure.com",
-    port=3306,
-    database="finale",
-    ssl_disabled=False
-)
-
 load_dotenv()
 
 app = Flask(__name__)
@@ -44,6 +35,17 @@ class Player(UserMixin, db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return Player.query.get(int(user_id))
+
+def connect_to_database():
+    return mysql.connector.connect(
+        user="dalouie",
+        password=os.getenv('password'),
+        host="finale.mysql.database.azure.com",
+        port=3306,
+        database="finale",
+        ssl_ca=os.getenv('SSL'),
+        ssl_verify_cert=True
+    )
 
 @app.route('/')
 def index():
