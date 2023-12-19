@@ -1,17 +1,29 @@
 let map;
 
-function initializeMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: YOUR_INITIAL_LATITUDE, lng: YOUR_INITIAL_LONGITUDE },
-        zoom: 12,
-    });
+function initializeMapWithLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                initializeMap(latitude, longitude);
+            },
+            (error) => {
+                console.error('Error getting user location:', error);
+                initializeMap(0, 0);
+            }
+        );
+    } else {
+        console.error('Geolocation is not supported by this browser.');
+        initializeMap(0,0);
+    }
 }
 
-function addMarker(location) {
-    new google.maps.Marker({
-        position: { lat: location.lat, lng: location.lng },
-        map: map,
-        title: location.name,
+function initializeMap(latitude, longitude) {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: latitude, lng: longitude },
+        zoom: 12,
     });
 }
 
@@ -47,15 +59,18 @@ function startTypingEffect() {
     }
 
     startNextSequence();
-
-    document.addEventListener("DOMContentLoaded", () => {
-        
-        initializeMap();
-    });
 }
 
 function getNearbyLocations() {
     const category = document.getElementById('category').value;
+
+    function addMarker(map, location) {
+        new google.maps.Marker({
+            position: { lat: location.latitude, lng: location.longitude },
+            map: map,
+            title: location.name,
+        });
+    }
 
     // Check if the Geolocation API is supported by the browser
     if (navigator.geolocation) {
@@ -71,6 +86,11 @@ function getNearbyLocations() {
                     .then(data => {
                         const resultDiv = document.getElementById('result');
                         resultDiv.innerHTML = JSON.stringify(data, null, 2);
+
+                        // Add markers for each location on the map
+                        data.locations.forEach(location => {
+                            addMarker(map, location);
+                        });
                     })
                     .catch(error => {
                         console.error('Error fetching nearby locations:', error);

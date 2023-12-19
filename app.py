@@ -8,13 +8,24 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask import Flask, render_template, jsonify, request
 from flask_migrate import Migrate
+from flask_cors import CORS
 import mysql.connector
 import requests
 import ngrok
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 load_dotenv()
 
+sentry_sdk.init(
+    dsn=os.getenv("SENTRY_DSN"),
+    integrations=[FlaskIntegration()],
+    traces_sample_rate=1.0,
+    profiles_sample_rate=1.0 
+)
+
 app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "https://maps.googleapis.com"}})
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('MY_SQL_CONNECTOR')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
