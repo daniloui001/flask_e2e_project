@@ -25,9 +25,24 @@ sentry_sdk.init(
 )
 
 app = Flask(__name__)
+oauth = OAuth(app)
 CORS(app, resources={r"/api/*": {"origins": "https://maps.googleapis.com"}})
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('MY_SQL_CONNECTOR')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+google = oauth.register(
+    name='finale',
+    client_id= os.getenv('GOOGLE_CLIENT_ID'),
+    client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+    authorize_params=None,
+    authorize_prompt=None,
+    authorize_response=None,
+    token_url='https://accounts.google.com/o/oauth2/token',
+    token_params=None,
+    redirect_uri='https://localhost:8000/google/auth/',
+    client_kwargs={'scope': 'openid profile email'},
+)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -43,6 +58,11 @@ class Player(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     PlayerID = db.Column(db.String(10), unique=True, nullable=False)
     Password = db.Column(db.String(255))
+
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    name = db.Column(db.String(120), nullable=False)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -104,6 +124,25 @@ def register():
             print(f"Error during registration: {e}")
 
     return render_template('register.html')
+
+@app.route('/altlogin')
+def altlogin():
+    return google.authorize_redirect(url_for('authorize', _external=True))
+
+@app.route('/authorize')
+def authorize():
+    token = google.authorize_access_token()
+    user_info = google.parse_id_token(token)
+
+    user = User.query.filter_by(email=user_info['email']).first()
+    if not user:
+        user = User(email=user_info['email'], name=user_info['name'])
+        db.session.add(user)
+        db.session.commit()
+
+    login_user(user)
+    flash('Login successful', 'success')
+    return redirect(url_for('index'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
