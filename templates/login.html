@@ -20,7 +20,7 @@
     {% endif %}
 {% endwith %}
     <div class="login-container">
-        <h1 id="typing-text">Hi again! Or maybe you clicked the wrong link...</h1>
+        <h1 id="typing-text">Ready To Explore Today?</h1>
 
         <form id="loginForm" action="{{ url_for('login') }}" method="post">
             <label for="username">PlayerID:</label>
@@ -29,16 +29,17 @@
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         
-            <button type="submit">Login</button>
+            <button type="button" onclick="navigateToNewGame()">All Set?</button>
         </form>
         
         <div id="loginResult"></div>
     </div>
 
     <script>
-        function login() {
-            // Implement your login logic here
+        function navigateToNewGame() {
+            window.location.href = '/newgame';
         }
     </script>
+    <div class="stars" id="stars"></div>
 </body>
 </html>

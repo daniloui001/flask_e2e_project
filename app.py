@@ -115,6 +115,10 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+@app.route('/aboutpage')
+def aboutpage():
+    return render_template('aboutpage.html')
+
 @app.route('/api/nearby-locations', methods=['GET'])
 def get_nearby_locations():
     category = request.args.get('category')

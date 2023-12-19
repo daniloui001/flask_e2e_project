@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Flask Website</title>
+    <title>Find Your Third Place</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link href='https://fonts.googleapis.com/css?family=VT323' rel='stylesheet'>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.0/gsap.min.js" async></script>
-    <script src="{{ url_for('static', filename='script.js') }}" async></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.0/gsap.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -18,15 +16,22 @@
             <button id="newGameBtn" onclick="navigateToNewGame()">New Game</button>
             <button id="continueGameBtn" onclick="navigateToRegister()">Continue Game</button>
         </div>
+        <div class ="line" id = "line4">
+            <button id="aboutBtn" onclick="navigateToAbout()">?</button>
+        </div>
     </div>
     <script>
-    function navigateToRegister() {
-        window.location.href = '/register';
-    }
-
-    function navigateToLogin() {
-        window.location.href = '/login';
-    }
+        function navigateToRegister() {
+            window.location.href = '/register';
+        }
+        function navigateToNewGame() {
+            window.location.href = '/newgame';
+        }
+        function navigateToAbout() {
+            window.location.href = '/aboutpage';
+        }
     </script>
+    <script src="{{ url_for('static', filename='script.js') }}" async></script>
+    <div class="stars" id="stars"></div>
 </body>
 </html>
